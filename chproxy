@@ -1,0 +1,45 @@
+#!/bin/bash
+
+clear
+echo -e "\e[1;34m::::::::::::::::::"
+echo "   Change Proxy   "
+echo -e "::::::::::::::::::\e[m"
+
+if [[ $1 = "uci"  ]]
+then
+    echo -e "\e[0;33mCambiando a Proxy de la UCI..."
+    sudo cp $HOME/chproxyfiles/proxyUCI/apt.conf /etc/apt/
+    sudo cp $HOME/chproxyfiles/proxyUCI/environment /etc/
+    sudo cp $HOME/chproxyfiles/proxyUCI/bash.bashrc /etc/
+    
+    #Creamos las variables de entorno
+    export http_proxy=http://127.0.0.1:3128/
+    export https_proxy=http://127.0.0.1:3128/
+    export ftp_proxy=http://127.0.0.1:3128/
+    export HTTP_PROXY=http://127.0.0.1:3128/
+    export HTTPS_PROXY=http://127.0.0.1:3128/
+    export FTP_PROXY=http://127.0.0.1:3128/
+    
+    echo "Iniciando servicio CNTLM..."
+    sudo service cntlm start
+
+else
+    echo -e "\e[0;33mCambiando a sin Proxy...."
+    sudo cp $HOME/chproxyfiles/proxyOriginal/apt.conf /etc/apt/
+    sudo cp $HOME/chproxyfiles/proxyOriginal/environment /etc/
+    sudo cp $HOME/chproxyfiles/proxyOriginal/bash.bashrc /etc/
+    echo -e "Apagando servicio CNTLM... \e[m"
+    sudo service cntlm stop
+    
+    #Eliminamos las variables de entorno 
+    unset http_proxy
+    unset https_proxy
+    unset ftp_proxy
+    unset HTTP_PROXY
+    unset HTTPS_PROXY
+    unset FTP_PROXY
+fi
+
+echo -e "\e[1;34m-----------------\e[m"
+echo -e "\e[1;32mFinish! \e[m"
+
